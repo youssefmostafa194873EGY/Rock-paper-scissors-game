@@ -1,1 +1,201 @@
 
+#include <string>
+#include <iostream>
+#include<cstdlib>
+using namespace std;
+enum enchoose {stone = 1, paper = 2, scissors = 3};
+enum enwinner { player = 1, computer = 2, draw = 3 };
+struct stroundinfo {
+	short roundnumber = 0;
+	enchoose playerchoose;
+	enchoose computerchoose;
+	enwinner winner;
+	string winnername;
+};
+struct stgameresults {
+	short gamerounds = 0;
+	short playerwintimes = 0;
+	short computerwintimes = 0;
+	short drawtimes = 0;
+	enwinner gamewinner;
+	string winnername = "";
+};
+
+
+//-----------------------------------------------------------------------------------------
+
+int askhowmanyrounds(int times) {
+	int check = 0;
+	cout << "\nhow many rounds you want play form 1 to 10: ";
+	do {
+
+		if (check > 0) {
+			cout << "\nnumber is wrong again please : ";
+		}
+		cin >> times;
+		check = 1;
+	} while (times <= 0 || times > 10);
+
+		return times;
+}
+
+int randomnumber(int from, int to) {
+	int randnum = rand() % (to - from + 1) + from;
+	return randnum;
+}
+
+int checkyourchoose(int choose) {
+	do{
+		cout << "\ntake your choose [1]:stone , [2]paper , [3]scissors : ";
+			cin >> choose;
+	} while (choose<0||choose>3);
+	return choose;
+}
+
+int howwin(int player, int computer) {
+	enchoose choose;
+	if (player == computer) {
+		return 3;
+	}
+
+	if (player == stone) {
+		if (computer == scissors) {
+			return 1;
+		}
+
+		if (computer == paper) {
+			return 2;
+		}
+	}
+
+	if (player == paper) {
+		if (computer == scissors){
+			return 2;
+		}
+
+		if (computer == stone) {
+			return 1;
+		}
+	}
+
+	if (player == scissors) {
+		
+		if (computer == stone) {
+			return 2;
+		}
+
+		if (computer == paper) {
+			return 1;
+		}
+	}
+	
+
+}
+
+void printplayerchoose(int player) {
+	enchoose choose;
+	if (player == stone)
+		cout << "\nplayer choose: stone\n";
+	if (player == paper)
+		cout << "\nplayer choose: paper\n";
+	if (player == scissors)
+		cout << "\nplayer choose: scissors\n";
+
+}
+
+void printcomputerchoose(int computer) {
+	if (computer == stone)
+		cout << "\ncomputer choose: stone\n";
+	if (computer == paper)
+		cout << "\ncomputer choose: paper\n";
+	if (computer == scissors)
+		cout << "\ncomputer choose: scissors\n";
+}
+
+void printresultround(int result) {
+	if (result == 1)
+		cout << "\nresult = [win],wow good job\n\n";
+	if (result == 2)
+		cout << "\nresult = [lose]\n\n";
+	if (result == 3)
+		cout << "\nresult = [draw]\n\n";
+}
+
+void printwhathappend(int player,int computer,int result,int i) {
+	cout << "\n\n------------" << "  round [" << i <<"]  ------------\n\n";
+	printplayerchoose(player);
+	printcomputerchoose(computer);
+	printresultround(result);
+	cout << "-----------------------------------------------------------------\n";
+}
+
+void addtofinalresult(int &win, int &lose, int &draw, int result) {
+	if (result == 1)
+		win++;
+	if (result == 2)
+		lose++;
+	if (result == 3)
+		draw++;
+}
+
+void howfinalwon(int win , int lose) {
+	cout << "final wanner : ";
+	if (win == lose)
+		cout << "no winner\n\n";
+	if (win > lose)
+		cout << "player\n\n";
+	if (win < lose)
+		cout << "computer\n\n";
+	cout << "---------------------------------------------------------\n\n";
+}
+
+void printfinalresult(int times,int win,int lose,int draw) {
+	cout << "\t----------------------------------\t\n\n";
+	cout << "\t         *** GAME OVER ***        \t";
+	cout << "\t----------------------------------\t\n\n\n\n";
+	cout << "\t----------{ Game Result }---------\t\n\n";
+	cout << "game rounds        :" << times <<"\n";
+	cout << "logy won times   :" << win <<"\n";
+	cout << "computer won times :" << lose <<"\n";
+	cout << "draw times         :" << draw <<"\n\n\n";
+	cout << "---------------------------------------------------------\n\n";
+	howfinalwon(win,lose);
+}
+
+void rounds(int times) {
+
+	int playerchoose = 0,computerchoose = 0,result =0;
+	int win = 0, lose = 0,draw = 0;
+	for (int i = 1; i <= times; i++) {
+
+		cout << "\nround [" << i << "]: \n";
+
+
+		playerchoose = checkyourchoose(playerchoose);
+		computerchoose = randomnumber(1, 3);
+		result = howwin(playerchoose,computerchoose);
+		printwhathappend(playerchoose, computerchoose,result,i);
+		addtofinalresult(win,lose,draw,result);
+		
+	}
+	printfinalresult(times,win,lose,draw);
+}
+
+void project() {
+	int times = 0;
+	char yn = 'y';
+ do{
+//	 ResetScreen();
+ times = askhowmanyrounds(times);
+ rounds(times);
+ cout << "\n\ndo you want play again : ";
+	 cin >> yn;
+ } while (yn=='y'||yn=='Y');
+}
+
+
+int main(void) {
+	srand((unsigned)time(NULL));
+	project();
+	
+}
